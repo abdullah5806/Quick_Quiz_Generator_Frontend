@@ -2,17 +2,20 @@ import api from "../../services/api.js";
 import Navbar from "../../components/Navbar.jsx";
 import Sidebar from "../../components/Sidebar.jsx";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const AllQuestions = () => {
     const [questions, setQuestions] = useState([]);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const search = searchParams.get("search") || "";
     const navigate = useNavigate();
-    // Fetch all questions
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const res = await api.get("/questions");
+                const res = await api.get("/questions",{
+                    params: {search: search}
+                });
                 console.log("API Response:", res.data);
                 if (res.data.success) {
                     setQuestions(res.data.data);
@@ -22,9 +25,21 @@ const AllQuestions = () => {
                 toast.error("Failed to fetch questions");
             }
         };
-        fetchQuestions();
-    }, []);
-    // Delete question
+        const timer = setTimeout(() => {
+            fetchQuestions();
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [search]);
+
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        if(value){
+            setSearchParams({search: value});
+        } else{
+            setSearchParams({});
+        }
+    };
+
     const handleDelete = async (id) => {
         try {
             const res = await api.delete(`/questions/${id}`);
@@ -49,18 +64,23 @@ const AllQuestions = () => {
                 <main className="flex-1 p-8">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="text-4xl font-bold text-gray-800">
-                                All Questions
-                            </h1>
-                            <p className="text-gray-600 mt-3 text-sm font-light">
-                                All Questions you will see here.
-                            </p>
+                            <h1 className="text-4xl font-bold text-gray-800">All Questions</h1>
+                            <p className="text-gray-600 mt-3 text-sm font-light">All Questions you will see here.</p>
                         </div>
                         <button onClick={() => navigate("/teacher/add-questions")}
                             className="bg-blue-500 text-white px-5 py-2 rounded-xl hover:bg-blue-800"
                         >
                             Add Questions
                         </button>
+                    </div>
+                    <div className="mt-8">
+                        <input
+                            type="text"
+                            placeholder="Search questions..."
+                            value={search}
+                            onChange={handleSearch}
+                            className="w-full md:w-96 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
                     </div>
                     <div className="mt-10 bg-white rounded-xl shadow-lg p-6">
                         <h2 className="text-2xl font-semibold mb-4">All Questions</h2>
