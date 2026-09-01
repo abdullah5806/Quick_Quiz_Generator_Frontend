@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar.jsx";
 import Sidebar from "../../components/Sidebar.jsx";
 import Pagination from "../Pagination.jsx";
 import CommonTable from "../CommonTable.jsx";
+import columns from "../../constant/PassIds.jsx"
 
 const QuizAttempts = () => {
 
@@ -139,29 +140,7 @@ const QuizAttempts = () => {
     setSearchParams({ page: 1 });
   };
 
-  const columns = [
-    {
-      key: "studentId",
-      label: "Student ID",
-      render: (attempt) => attempt.user?.id ?? "-"
-    },
-    {
-      key: "studentName",
-      label: "Student Name",
-      render: (attempt) => attempt.user?.name ?? "-"
-    },
-    {
-      key: "quizTitle",
-      label: "Quiz Title",
-      render: (attempt) => attempt.quiz?.title ?? "-"
-    },
-    {
-      key: "attemptedAt",
-      label: "Attempted At",
-      align: "center",
-      render: (attempt) => attempt.attemptedAt ? new Date( attempt.attemptedAt ).toLocaleString() : "-"
-    }
-  ];
+  
 
   return (
     <div className="min-h-screen bg-gray-100">
