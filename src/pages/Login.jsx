@@ -48,7 +48,7 @@ const Login = () => {
       toast.success("Login Successful!");
       console.log("====>",response.data.user.role)
       // Navigate based on user role
-      if (response.data.user.role === "teacher") {
+      if (response.data.user.role === "Teacher") {
         navigate("/teacher/dashboard");
       } 
       else {
