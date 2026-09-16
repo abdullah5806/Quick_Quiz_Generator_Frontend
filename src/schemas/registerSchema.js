@@ -22,7 +22,5 @@ export const registerSchema = z.object({
     /[!@#$%^&*(),.?":{}|<>]/,
     "Password must contain at least one special character"
   ),
-  
-  role: z
-  .enum(["Student", "Instructor"]),
+  role: z.string().trim().min(1, "Role is required"),
 });
